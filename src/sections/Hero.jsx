@@ -172,6 +172,12 @@ function Hero() {
         </motion.div>
 
       </motion.div>
+      <div className="hero-image-placeholder">
+  <div className="hero-placeholder-inner">
+    <span>YOUR PHOTO</span>
+    <small>Profile Image</small>
+  </div>
+</div>
 
       {/* Animated scroll indicator */}
       <motion.div

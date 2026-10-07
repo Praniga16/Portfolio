@@ -2,30 +2,30 @@ import { motion } from "framer-motion";
 import {
   Brain,
   Code2,
-  Database,
+  BarChart3,
   Rocket,
 } from "lucide-react";
 
-const cards = [
+const aboutCards = [
   {
-    icon: <Brain size={22} />,
+    icon: Brain,
     title: "AI & Machine Learning",
-    text: "Exploring machine learning, deep learning and intelligent systems to solve real-world problems.",
+    text: "Exploring AI and machine learning to build practical solutions for real-world problems.",
   },
   {
-    icon: <Code2 size={22} />,
-    title: "Software Development",
-    text: "Building practical applications using Python, Django and modern development technologies.",
+    icon: Code2,
+    title: "Web Development",
+    text: "Building clean and user-friendly applications using modern web technologies.",
   },
   {
-    icon: <Database size={22} />,
+    icon: BarChart3,
     title: "Data Science",
-    text: "Working with data analysis, visualization and machine learning techniques to discover useful insights.",
+    text: "Working with data to discover patterns, generate insights, and support better decisions.",
   },
   {
-    icon: <Rocket size={22} />,
-    title: "Problem Solving",
-    text: "Strengthening programming and DSA skills while continuously learning and building new solutions.",
+    icon: Rocket,
+    title: "Continuous Learning",
+    text: "Constantly learning new technologies and improving my skills through hands-on projects.",
   },
 ];
 
@@ -34,93 +34,82 @@ function About() {
     <section id="about" className="about-section">
       <div className="section-container">
 
+        {/* Section Heading */}
         <motion.div
           className="section-heading"
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7 }}
         >
-          <span className="section-label">
-            01 — ABOUT ME
-          </span>
+          <span className="section-label">ABOUT ME</span>
 
           <h2>
             Turning curiosity into
-            <span> real-world solutions.</span>
+            <span> meaningful technology.</span>
           </h2>
         </motion.div>
 
         <div className="about-content">
 
+          {/* About Text */}
           <motion.div
             className="about-text"
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7 }}
           >
             <p>
-              I'm Praniga, an Artificial Intelligence and Data
-              Science engineering student with a strong interest
-              in building intelligent and practical applications.
+              I’m Praniga, a passionate and curious student interested in
+              technology, artificial intelligence, and innovation. I enjoy
+              learning new technologies and applying them to solve
+              everyday problems.
             </p>
 
             <p>
-              I enjoy combining programming, machine learning and
-              full-stack development to turn ideas into useful
-              digital solutions. My current focus is on strengthening
-              my foundations in AI, software development and
-              problem solving.
+              My interests include Artificial Intelligence, Machine Learning,
+              Data Science, and web development. I enjoy turning ideas into
+              practical applications and continuously improving my technical
+              skills through hands-on projects.
             </p>
 
             <p>
-              I believe in learning by building — experimenting with
-              technologies, developing projects and continuously
-              improving through real-world challenges.
+              I believe that good technology should not only be powerful,
+              but also simple, useful, and accessible to people.
             </p>
           </motion.div>
 
+          {/* About Cards */}
           <div className="about-cards">
+            {aboutCards.map((card, index) => {
+              const Icon = card.icon;
 
-            {cards.map((card, index) => (
-              <motion.div
-                className="about-card"
-                key={card.title}
-                initial={{
-                  opacity: 0,
-                  y: 40,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                  amount: 0.2,
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.12,
-                }}
-                whileHover={{
-                  y: -8,
-                }}
-              >
-                <div className="about-card-icon">
-                  {card.icon}
-                </div>
+              return (
+                <motion.div
+                  className="about-card"
+                  key={card.title}
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.1,
+                  }}
+                >
+                  <div className="about-card-icon">
+                    <Icon size={21} strokeWidth={1.8} />
+                  </div>
 
-                <h3>{card.title}</h3>
+                  <h3>{card.title}</h3>
 
-                <p>{card.text}</p>
-              </motion.div>
-            ))}
-
+                  <p>{card.text}</p>
+                </motion.div>
+              );
+            })}
           </div>
 
         </div>
-
       </div>
     </section>
   );
