@@ -18,8 +18,15 @@ function NeuralBackground() {
     let particles = [];
 
     function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       createParticles();
     }
@@ -27,17 +34,26 @@ function NeuralBackground() {
     function createParticles() {
       particles = [];
 
-      const count = window.innerWidth < 768 ? 80 : 140;
+      const count =
+        window.innerWidth < 768 ? 85 : 170;
 
       for (let i = 0; i < count; i++) {
         particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
 
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
+          vx: (Math.random() - 0.5) * 0.75,
+          vy: (Math.random() - 0.5) * 0.75,
 
-          size: Math.random() * 1.8 + 0.7,
+          size: Math.random() * 1.7 + 0.7,
+
+          baseSize: Math.random() * 1.7 + 0.7,
+
+          pulse:
+            Math.random() * Math.PI * 2,
+
+          pulseSpeed:
+            0.015 + Math.random() * 0.025,
         });
       }
     }
@@ -61,15 +77,13 @@ function NeuralBackground() {
     }
 
     function animate() {
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      ctx.clearRect(0, 0, width, height);
 
       /* =========================
-         MOVE PARTICLES
+         PARTICLE MOVEMENT
       ========================= */
 
       particles.forEach((p) => {
@@ -78,63 +92,93 @@ function NeuralBackground() {
 
         /* Screen wrapping */
 
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
+        if (p.x < -20) p.x = width + 20;
+        if (p.x > width + 20) p.x = -20;
 
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        if (p.y < -20) p.y = height + 20;
+        if (p.y > height + 20) p.y = -20;
 
-        /* Mouse interaction */
+        /* Pulse */
+
+        p.pulse += p.pulseSpeed;
+
+        p.size =
+          p.baseSize +
+          Math.sin(p.pulse) * 0.45;
+
+        /* =========================
+           CURSOR INTERACTION
+        ========================= */
 
         if (mouse.active) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
 
-          const distance = Math.sqrt(
-            dx * dx + dy * dy
-          );
+          const distance = Math.hypot(dx, dy);
 
-          const radius = 180;
+          const radius = 220;
 
-          if (distance < radius) {
+          if (distance < radius && distance > 0) {
             const force =
               (radius - distance) / radius;
 
-            const angle = Math.atan2(dy, dx);
+            /*
+             * Gentle attraction toward cursor
+             */
 
             p.vx +=
-              Math.cos(angle) *
+              (dx / distance) *
               force *
-              0.08;
+              0.018;
 
             p.vy +=
-              Math.sin(angle) *
+              (dy / distance) *
               force *
-              0.08;
+              0.018;
           }
         }
 
-        /* Slow down */
+        /* =========================
+           NATURAL MOVEMENT
+        ========================= */
 
-        p.vx *= 0.985;
-        p.vy *= 0.985;
+        p.vx *= 0.995;
+        p.vy *= 0.995;
 
-        /* Keep minimum movement */
+        /* Prevent particles from stopping */
 
-        if (Math.abs(p.vx) < 0.05) {
+        if (Math.abs(p.vx) < 0.08) {
           p.vx +=
-            (Math.random() - 0.5) * 0.01;
+            (Math.random() - 0.5) * 0.018;
         }
 
-        if (Math.abs(p.vy) < 0.05) {
+        if (Math.abs(p.vy) < 0.08) {
           p.vy +=
-            (Math.random() - 0.5) * 0.01;
+            (Math.random() - 0.5) * 0.018;
+        }
+
+        /* Speed limit */
+
+        const speed = Math.hypot(
+          p.vx,
+          p.vy
+        );
+
+        const maxSpeed = 1.2;
+
+        if (speed > maxSpeed) {
+          p.vx =
+            (p.vx / speed) *
+            maxSpeed;
+
+          p.vy =
+            (p.vy / speed) *
+            maxSpeed;
         }
       });
 
-
       /* =========================
-         CONNECTION LINES
+         CONNECTION NETWORK
       ========================= */
 
       for (let i = 0; i < particles.length; i++) {
@@ -149,38 +193,50 @@ function NeuralBackground() {
           const dx = a.x - b.x;
           const dy = a.y - b.y;
 
-          const distance = Math.sqrt(
-            dx * dx + dy * dy
+          const distance = Math.hypot(
+            dx,
+            dy
           );
 
-          if (distance < 135) {
-            let opacity =
-              1 - distance / 135;
+          const connectionDistance = 145;
 
-            /* Stronger near mouse */
+          if (
+            distance <
+            connectionDistance
+          ) {
+            let opacity =
+              1 -
+              distance /
+                connectionDistance;
+
+            opacity *= 0.42;
+
+            /* Highlight network near cursor */
 
             if (mouse.active) {
-              const mouseA = Math.hypot(
-                a.x - mouse.x,
-                a.y - mouse.y
-              );
+              const mouseA =
+                Math.hypot(
+                  a.x - mouse.x,
+                  a.y - mouse.y
+                );
 
-              const mouseB = Math.hypot(
-                b.x - mouse.x,
-                b.y - mouse.y
-              );
+              const mouseB =
+                Math.hypot(
+                  b.x - mouse.x,
+                  b.y - mouse.y
+                );
 
               if (
-                mouseA < 180 ||
-                mouseB < 180
+                mouseA < 220 ||
+                mouseB < 220
               ) {
-                opacity *= 2;
+                opacity *= 2.2;
               }
             }
 
             opacity = Math.min(
               opacity,
-              0.45
+              0.65
             );
 
             ctx.beginPath();
@@ -198,12 +254,49 @@ function NeuralBackground() {
         }
       }
 
-
       /* =========================
-         PARTICLES
+         PARTICLE GLOW + NODES
       ========================= */
 
       particles.forEach((p) => {
+        /* Outer glow */
+
+        const gradient =
+          ctx.createRadialGradient(
+            p.x,
+            p.y,
+            0,
+            p.x,
+            p.y,
+            p.size * 5
+          );
+
+        gradient.addColorStop(
+          0,
+          "rgba(232, 165, 171, 0.22)"
+        );
+
+        gradient.addColorStop(
+          1,
+          "rgba(232, 165, 171, 0)"
+        );
+
+        ctx.beginPath();
+
+        ctx.fillStyle = gradient;
+
+        ctx.arc(
+          p.x,
+          p.y,
+          p.size * 5,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.fill();
+
+        /* Main node */
+
         ctx.beginPath();
 
         ctx.arc(
@@ -215,26 +308,26 @@ function NeuralBackground() {
         );
 
         ctx.fillStyle =
-          "rgba(232, 165, 171, 0.7)";
+          "rgba(232, 165, 171, 0.78)";
 
         ctx.fill();
       });
 
-
       /* =========================
-         MOUSE CONNECTIONS
+         CURSOR NETWORK
       ========================= */
 
       if (mouse.active) {
         particles.forEach((p) => {
-          const distance = Math.hypot(
-            p.x - mouse.x,
-            p.y - mouse.y
-          );
+          const distance =
+            Math.hypot(
+              p.x - mouse.x,
+              p.y - mouse.y
+            );
 
-          if (distance < 180) {
+          if (distance < 220) {
             const opacity =
-              1 - distance / 180;
+              1 - distance / 220;
 
             ctx.beginPath();
 
@@ -250,7 +343,7 @@ function NeuralBackground() {
 
             ctx.strokeStyle =
               `rgba(217, 120, 130, ${
-                opacity * 0.55
+                opacity * 0.6
               })`;
 
             ctx.lineWidth = 0.8;
@@ -259,20 +352,67 @@ function NeuralBackground() {
           }
         });
 
-        /* Cursor interaction point */
+        /* =========================
+           CURSOR ENERGY RINGS
+        ========================= */
+
+        const time =
+          Date.now() * 0.002;
+
+        const ring1 =
+          8 + Math.sin(time) * 3;
+
+        const ring2 =
+          18 + Math.sin(time * 0.8) * 5;
 
         ctx.beginPath();
 
         ctx.arc(
           mouse.x,
           mouse.y,
-          3,
+          ring1,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.strokeStyle =
+          "rgba(232, 165, 171, 0.55)";
+
+        ctx.lineWidth = 0.8;
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.arc(
+          mouse.x,
+          mouse.y,
+          ring2,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.strokeStyle =
+          "rgba(196, 22, 32, 0.25)";
+
+        ctx.lineWidth = 0.7;
+
+        ctx.stroke();
+
+        /* Cursor center */
+
+        ctx.beginPath();
+
+        ctx.arc(
+          mouse.x,
+          mouse.y,
+          2.5,
           0,
           Math.PI * 2
         );
 
         ctx.fillStyle =
-          "rgba(232, 165, 171, 0.9)";
+          "rgba(232, 165, 171, 0.95)";
 
         ctx.fill();
       }

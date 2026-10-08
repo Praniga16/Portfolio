@@ -172,12 +172,24 @@ function Hero() {
         </motion.div>
 
       </motion.div>
-      <div className="hero-image-placeholder">
+      <motion.div
+  className="hero-image-placeholder"
+  initial={{ opacity: 0, scale: 0.9, x: 40 }}
+  animate={{ opacity: 1, scale: 1, x: 0 }}
+  transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+>
+  <div className="hero-photo-glow" />
+
   <div className="hero-placeholder-inner">
+    <div className="photo-ring" />
+
     <span>YOUR PHOTO</span>
     <small>Profile Image</small>
   </div>
-</div>
+
+  <div className="photo-corner corner-top" />
+  <div className="photo-corner corner-bottom" />
+</motion.div>
 
       {/* Animated scroll indicator */}
       <motion.div

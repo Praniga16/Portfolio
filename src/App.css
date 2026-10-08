@@ -1573,42 +1573,63 @@
   position: relative;
   z-index: 2;
 }
-
-/* ================================
-   HERO PHOTO PLACEHOLDER
-================================ */
+/* =========================
+   HERO PHOTO
+   ========================= */
 
 .hero-image-placeholder {
   position: absolute;
-
   right: 8%;
   top: 50%;
-
-  transform: translateY(-50%);
 
   width: 330px;
   height: 410px;
 
-  z-index: 3;
+  transform: translateY(-50%);
 
-  padding: 5px;
+  z-index: 70;
+
+  padding: 2px;
 
   border-radius: 28px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(196, 22, 32, 0.8),
-      rgba(90, 1, 6, 0.45),
-      rgba(232, 165, 171, 0.35)
-    );
+  background: linear-gradient(
+    145deg,
+    rgba(196, 22, 32, 0.8),
+    rgba(90, 1, 6, 0.45),
+    rgba(232, 165, 171, 0.35)
+  );
 
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.45),
-    0 0 60px rgba(196, 22, 32, 0.12);
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(196, 22, 32, 0.14);
+
+  animation: photoFloat 5s ease-in-out infinite;
 }
 
+
+/* Floating movement */
+
+@keyframes photoFloat {
+  0% {
+    transform: translateY(-50%);
+  }
+
+  50% {
+    transform: translateY(calc(-50% - 10px));
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+
+/* Inner frame */
+
 .hero-placeholder-inner {
+  position: relative;
+
   width: 100%;
   height: 100%;
 
@@ -1617,59 +1638,188 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 24px;
+  overflow: hidden;
+
+  border-radius: 26px;
 
   background:
-    linear-gradient(
-      145deg,
-      #0D0D0D,
-      #080808
-    );
+    radial-gradient(
+      circle at center,
+      rgba(151, 3, 12, 0.12),
+      transparent 55%
+    ),
+    #0D0D0D;
 
-  border: 1px dashed rgba(232, 165, 171, 0.22);
+  border: 1px solid rgba(232, 165, 171, 0.16);
 
   color: var(--red-soft);
-
-  text-align: center;
 }
 
+
+/* Moving glow */
+
+.hero-photo-glow {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  top: 20%;
+  left: 20%;
+
+  border-radius: 50%;
+
+  background: rgba(196, 22, 32, 0.18);
+
+  filter: blur(60px);
+
+  pointer-events: none;
+
+  animation: photoGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes photoGlow {
+  from {
+    transform: translate(0, 0) scale(0.9);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: translate(70px, 100px) scale(1.2);
+    opacity: 0.9;
+  }
+}
+
+
+/* Photo placeholder text */
+
 .hero-placeholder-inner span {
+  position: relative;
+  z-index: 3;
+
   font-family: "Space Grotesk", sans-serif;
 
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
 
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+
+  color: var(--red-soft);
 }
 
 .hero-placeholder-inner small {
-  margin-top: 8px;
+  position: relative;
+  z-index: 3;
+
+  margin-top: 9px;
 
   color: var(--muted);
 
-  font-size: 0.72rem;
-
+  font-size: 0.7rem;
   letter-spacing: 1px;
 }
 
 
-/* ================================
-   HERO PHOTO RESPONSIVE
-================================ */
+/* Circular decorative ring */
+
+.photo-ring {
+  position: absolute;
+
+  width: 150px;
+  height: 150px;
+
+  border: 1px solid rgba(232, 165, 171, 0.14);
+
+  border-radius: 50%;
+
+  animation: ringRotate 12s linear infinite;
+}
+
+.photo-ring::before {
+  content: "";
+
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  top: -3px;
+  left: 50%;
+
+  border-radius: 50%;
+
+  background: var(--red-soft);
+
+  box-shadow:
+    0 0 15px var(--red-bright),
+    0 0 30px rgba(196, 22, 32, 0.4);
+}
+
+@keyframes ringRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Corner details */
+
+.photo-corner {
+  position: absolute;
+
+  width: 35px;
+  height: 35px;
+
+  z-index: 5;
+
+  pointer-events: none;
+}
+
+.corner-top {
+  top: 18px;
+  right: 18px;
+
+  border-top: 1px solid var(--red-soft);
+  border-right: 1px solid var(--red-soft);
+
+  border-radius: 0 10px 0 0;
+}
+
+.corner-bottom {
+  bottom: 18px;
+  left: 18px;
+
+  border-bottom: 1px solid var(--red-soft);
+  border-left: 1px solid var(--red-soft);
+
+  border-radius: 0 0 0 10px;
+}
+
+
+/* Hover */
+
+.hero-image-placeholder:hover {
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.55),
+    0 0 70px rgba(196, 22, 32, 0.2);
+}
+
+
+/* Responsive */
 
 @media (max-width: 1100px) {
-
   .hero-image-placeholder {
     right: 4%;
-
     width: 270px;
     height: 350px;
   }
-
 }
 
 @media (max-width: 900px) {
-
   .hero-image-placeholder {
     position: relative;
 
@@ -1682,8 +1832,23 @@
     height: 330px;
 
     margin: 60px auto 0;
+
+    animation: photoFloatMobile 5s ease-in-out infinite;
   }
 
+  @keyframes photoFloatMobile {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-8px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
 }
 /* =================================
    INTERACTIVE PARTICLE BACKGROUND
@@ -1775,3 +1940,140 @@
       rgba(13, 13, 13, 0.75)
     );
 }
+/* ============================= */
+/* NAVBAR ANIMATIONS */
+/* ============================= */
+
+.navbar {
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* Navigation links */
+
+.navbar .nav-links a {
+  position: relative;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+/* Red animated underline */
+
+.navbar .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 0;
+  height: 1px;
+
+  background: var(--red-soft);
+
+  transform: translateX(-50%);
+
+  transition:
+    width 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+  color: var(--red-soft);
+
+  text-shadow:
+    0 0 10px rgba(196, 22, 32, 0.35);
+}
+
+.navbar .nav-links a:hover::after {
+  width: 100%;
+
+  box-shadow:
+    0 0 8px rgba(196, 22, 32, 0.55);
+}
+
+
+/* ============================= */
+/* LOGO */
+/* ============================= */
+
+.navbar .logo {
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.navbar .logo span {
+  transition:
+    text-shadow 0.3s ease,
+    color 0.3s ease;
+}
+
+.navbar .logo:hover {
+  text-shadow:
+    0 0 18px rgba(196, 22, 32, 0.3);
+}
+
+.navbar .logo:hover span {
+  text-shadow:
+    0 0 12px rgba(232, 165, 171, 0.7);
+}
+
+
+/* ============================= */
+/* SOCIAL ICONS */
+/* ============================= */
+
+.nav-socials a {
+  position: relative;
+
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.nav-socials a:hover {
+  color: var(--red-soft);
+
+  text-shadow:
+    0 0 12px rgba(196, 22, 32, 0.55);
+}
+
+
+/* Small glow underneath icon */
+
+.nav-socials a::before {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+
+  width: 0;
+  height: 1px;
+
+  background: var(--red-soft);
+
+  transform: translateX(-50%);
+
+  transition: width 0.3s ease;
+}
+
+.nav-socials a:hover::before {
+  width: 70%;
+
+  box-shadow:
+    0 0 8px rgba(196, 22, 32, 0.6);
+}
+
+
+/* Navbar hover */
+
+.navbar:hover {
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
