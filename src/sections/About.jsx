@@ -2,117 +2,193 @@ import { motion } from "framer-motion";
 import {
   Brain,
   Code2,
-  BarChart3,
+  Database,
   Rocket,
+  GraduationCap,
+  Target,
+  Lightbulb,
 } from "lucide-react";
 
-const aboutCards = [
+const focusAreas = [
   {
     icon: Brain,
-    title: "AI & Machine Learning",
-    text: "Exploring AI and machine learning to build practical solutions for real-world problems.",
+    title: "Artificial Intelligence",
+    description:
+      "Exploring machine learning, deep learning, and AI-powered applications.",
   },
   {
     icon: Code2,
-    title: "Web Development",
-    text: "Building clean and user-friendly applications using modern web technologies.",
+    title: "Software Development",
+    description:
+      "Building practical applications with Python, Java, and modern web technologies.",
   },
   {
-    icon: BarChart3,
-    title: "Data Science",
-    text: "Working with data to discover patterns, generate insights, and support better decisions.",
+    icon: Database,
+    title: "Data & Problem Solving",
+    description:
+      "Strengthening logical thinking and developing data-driven solutions.",
   },
   {
     icon: Rocket,
     title: "Continuous Learning",
-    text: "Constantly learning new technologies and improving my skills through hands-on projects.",
+    description:
+      "Applying new concepts through hands-on projects and experimentation.",
   },
 ];
 
-function About() {
+const skills = [
+  "Python",
+  "Java",
+  "Machine Learning",
+  "Deep Learning",
+  "Django",
+  "FastAPI",
+  "Data Structures",
+  "Web Development",
+];
+
+export default function About() {
   return (
     <section id="about" className="about-section">
       <div className="section-container">
-
-        {/* Section Heading */}
         <motion.div
           className="section-heading"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
         >
-          <span className="section-label">ABOUT ME</span>
+          <span className="section-label">GET TO KNOW ME</span>
 
           <h2>
-            Turning curiosity into
-            <span> meaningful technology.</span>
+            About <span>Me</span>
           </h2>
+
+          <p>
+            Curious by nature. Driven by technology. Focused on building
+            meaningful solutions.
+          </p>
         </motion.div>
 
         <div className="about-content">
-
-          {/* About Text */}
           <motion.div
             className="about-text"
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.65 }}
           >
+            <span className="about-intro-label">
+              <GraduationCap size={17} />
+              AI & DATA SCIENCE ENGINEERING STUDENT
+            </span>
+
+            <h3>
+              Turning curiosity into
+              <span> meaningful projects.</span>
+            </h3>
+
             <p>
-              I’m Praniga, a passionate and curious student interested in
-              technology, artificial intelligence, and innovation. I enjoy
-              learning new technologies and applying them to solve
-              everyday problems.
+              I'm Praniga, an Artificial Intelligence and Data Science
+              engineering student passionate about applying technology
+              to real-world problems. I enjoy exploring intelligent
+              systems and turning what I learn into practical applications.
             </p>
 
             <p>
-              My interests include Artificial Intelligence, Machine Learning,
-              Data Science, and web development. I enjoy turning ideas into
-              practical applications and continuously improving my technical
-              skills through hands-on projects.
+              My interests include machine learning, AI-powered
+              applications, and full-stack development. Each project
+              helps me strengthen my programming, problem-solving,
+              and software development skills.
             </p>
 
             <p>
-              I believe that good technology should not only be powerful,
-              but also simple, useful, and accessible to people.
+              My long-term goal is to become an AI Engineer and build
+              useful, reliable, and thoughtfully designed intelligent
+              solutions.
             </p>
+
+            <div className="about-goal">
+              <span className="about-goal-icon">
+                <Target size={20} />
+              </span>
+
+              <div>
+                <strong>My Career Goal</strong>
+                <p>
+                  Create practical AI solutions that connect innovation
+                  with everyday needs.
+                </p>
+              </div>
+            </div>
+
+            <div className="about-skills">
+              <h4>TECHNICAL SKILLS & INTERESTS</h4>
+
+              <div className="about-skill-list">
+                {skills.map((skill, index) => (
+                  <motion.span
+                    className="about-skill-tag"
+                    key={skill}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.3,
+                      delay: index * 0.05,
+                    }}
+                  >
+                    {skill}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
-          {/* About Cards */}
           <div className="about-cards">
-            {aboutCards.map((card, index) => {
-              const Icon = card.icon;
+            {focusAreas.map((area, index) => {
+              const Icon = area.icon;
 
               return (
-                <motion.div
+                <motion.article
                   className="about-card"
-                  key={card.title}
-                  initial={{ opacity: 0, y: 35 }}
+                  key={area.title}
+                  initial={{ opacity: 0, y: 22 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{
-                    duration: 0.6,
+                    duration: 0.5,
                     delay: index * 0.1,
                   }}
+                  whileHover={{ y: -5 }}
                 >
                   <div className="about-card-icon">
-                    <Icon size={21} strokeWidth={1.8} />
+                    <Icon size={23} />
                   </div>
 
-                  <h3>{card.title}</h3>
-
-                  <p>{card.text}</p>
-                </motion.div>
+                  <h4>{area.title}</h4>
+                  <p>{area.description}</p>
+                </motion.article>
               );
             })}
-          </div>
 
+            <motion.div
+              className="about-note"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+            >
+              <Lightbulb size={19} />
+
+              <p>
+                Every project is a chance to learn, experiment, and
+                build something better.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-export default About;
